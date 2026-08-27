@@ -13,13 +13,31 @@ permissions:
   contents: read
 
 jobs:
-  docker-compose:
-    name: Docker Compose
+  document-service:
     runs-on: ubuntu-latest
-
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: document_svc
+          POSTGRES_PASSWORD: document_svc
+          POSTGRES_DB: document_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: services/document-service
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Validate Docker Compose
-        run: docker compose -f docker/docker-compose.yml config
+      - uses: actions/checkout@v4
+      - run : chmod +x mvnw
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - run: ./mvnw clean verify
