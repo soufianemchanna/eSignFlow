@@ -20,6 +20,7 @@ jobs:
         working-directory: services/document-service
     steps:
       - uses: actions/checkout@v4
+      - run : chmod +x mvnw
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
