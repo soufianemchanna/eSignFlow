@@ -1,17 +1,39 @@
 version: "3.9"
 
 services:
-  postgres:
+  document-postgres:
     image: postgres:16
-    container_name: esignflow-postgres
+    container_name: esignflow-document-postgres
     environment:
-      POSTGRES_USER: esignflow
-      POSTGRES_PASSWORD: esignflow
-      POSTGRES_DB: esignflow
+      POSTGRES_USER: document_svc
+      POSTGRES_PASSWORD: document_svc
+      POSTGRES_DB: document_db
     ports:
       - "54332:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - document_pgdata:/var/lib/postgresql/data
+  signature-postgres:
+    image: postgres:16
+    container_name: esignflow-signature-postgres
+    environment:
+      POSTGRES_USER: signature_svc
+      POSTGRES_PASSWORD: signature_svc
+      POSTGRES_DB: signature_db
+    ports:
+      - "54333:5432"
+    volumes:
+      - signature_pgdata:/var/lib/postgresql/data
+  notification-postgres:
+    image: postgres:16
+    container_name: signflow-notification-postgres
+    environment:
+      POSTGRES_USER: notification_svc
+      POSTGRES_PASSWORD: notification_svc
+      POSTGRES_DB: notification_db
+    ports:
+      - "54334:5432"
+    volumes:
+      - notification_pgdata:/var/lib/postgresql/data
 
   kafka:
     image: confluentinc/cp-kafka:7.6.0
@@ -60,5 +82,7 @@ services:
 
 
 volumes:
-  pgdata:
+  signature_pgdata:
+  document_pgdata:
+  notification_pgdata:
   miniodata:
