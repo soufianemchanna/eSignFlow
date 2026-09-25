@@ -40,4 +40,7 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-      - run: ./mvnw clean verify
+      - name: Run tests
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: ./mvnw clean verify
