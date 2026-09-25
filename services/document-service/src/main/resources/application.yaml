@@ -1,6 +1,8 @@
 spring:
   application:
     name: document-service
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     url: jdbc:postgresql://localhost:5432/document_db
     username: document_svc
@@ -12,3 +14,7 @@ spring:
     enabled: true
 server:
   port: 8081
+esignflow:
+  jwt:
+    secret: ${JWT_SECRET:secret}
+    expiration: 3600000
