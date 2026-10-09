@@ -29,3 +29,5 @@ minio:
   access-key: ${MINIO_ACCESS_KEY:minioadmin}
   secret-key: ${MINIO_SECRET_KEY:minioadmin123}
   bucket: ${MINIO_BUCKET:esignflow-documents}
+  bucket-init:
+    enabled: ${MINIO_BUCKET_INIT_ENABLED:true}
