@@ -43,4 +43,5 @@ jobs:
       - name: Run tests
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          MINIO_BUCKET_INIT_ENABLED: "false"
         run: ./mvnw clean verify
