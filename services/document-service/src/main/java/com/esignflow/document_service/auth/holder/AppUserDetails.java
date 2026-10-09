@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public class AppUserDetails implements UserDetails {
 
@@ -16,9 +17,7 @@ public class AppUserDetails implements UserDetails {
     public AppUserDetails(User user) {
         this.user = user;
     }
-    public User getUser() {
-        return user;
-    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
@@ -32,6 +31,10 @@ public class AppUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return user.getEmail();
+    }
+
+    public UUID getId() {
+        return user.getId();
     }
 
     @Override

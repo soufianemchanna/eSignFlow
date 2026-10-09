@@ -4,6 +4,7 @@ package com.esignflow.document_service.auth.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Component
+@Slf4j
 public class JwtService {
     private final SecretKey signingKey;
     private final long expirationMs;
@@ -20,6 +22,7 @@ public class JwtService {
             @Value("${esignflow.jwt.secret}") String secret,
             @Value("${esignflow.jwt.expiration}") long expirationMs
     ){
+        log.info("JWT Secret: {}", secret);
         this.signingKey = Keys.hmacShaKeyFor(secret.getBytes());
         this.expirationMs = expirationMs;
     }
