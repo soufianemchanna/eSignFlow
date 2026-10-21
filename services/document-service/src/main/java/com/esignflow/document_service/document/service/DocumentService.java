@@ -1,7 +1,7 @@
 package com.esignflow.document_service.document.service;
 
 
-import com.esignflow.document_service.common.exception.DocumentValidationException;
+import com.esignflow.document_service.document.exception.DocumentValidationException;
 import com.esignflow.document_service.document.domain.Document;
 import com.esignflow.document_service.document.domain.DocumentRepository;
 import com.esignflow.document_service.document.domain.DocumentStatus;

@@ -1,4 +1,4 @@
-package com.esignflow.document_service.common.exception;
+package com.esignflow.document_service.document.exception;
 
 import lombok.Getter;
 
