@@ -1,6 +1,6 @@
 package com.esignflow.document_service.storage;
 
-import com.esignflow.document_service.common.exception.DocumentStorageException;
+import com.esignflow.document_service.document.exception.DocumentStorageException;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import lombok.RequiredArgsConstructor;
