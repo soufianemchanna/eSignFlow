@@ -4,6 +4,7 @@ package com.esignflow.document_service.document.controller;
 import com.esignflow.document_service.auth.holder.CurrentUserId;
 import com.esignflow.document_service.document.dto.DocumentResponse;
 import com.esignflow.document_service.document.service.DocumentService;
+import com.esignflow.document_service.document.service.DocumentWorkflowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DocumentController {
     private final DocumentService documentService;
+    private final DocumentWorkflowService documentWorkflowService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -28,4 +30,16 @@ public class DocumentController {
             ){
         return documentService.createDocument(ownerId, title, description, file);
     }
+
+    @PostMapping("/{id}/send")
+    public DocumentResponse send(@PathVariable UUID id, @CurrentUserId UUID ownerId){
+        return DocumentResponse.fromDocument(documentWorkflowService.send(id, ownerId));
+    }
+
+    @PostMapping("/{id}/cancel")
+    public DocumentResponse cancel(@PathVariable UUID id, @CurrentUserId UUID ownerId){
+        return DocumentResponse.fromDocument(documentWorkflowService.cancel(id, ownerId));
+    }
+
+
 }

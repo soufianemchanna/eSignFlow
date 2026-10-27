@@ -1,11 +1,14 @@
 package com.esignflow.document_service.document.domain;
 
 
+import com.esignflow.document_service.document.exception.InvalidDocumentStatusTransitionException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -20,6 +23,9 @@ public class Document {
 
     @Column(name = "owner_id", nullable = false)
     private UUID ownerID;
+
+    @Version
+    private Long version;
 
     @Column(nullable = false)
     private String title;
@@ -37,6 +43,7 @@ public class Document {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
+    @Setter(AccessLevel.NONE)
     private DocumentStatus status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -44,6 +51,23 @@ public class Document {
 
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+
+    public void send(){
+        transitionTo(DocumentStatus.PENDING_SIGNATURE);
+    }
+
+    public void cancel(){
+        transitionTo(DocumentStatus.CANCELLED);
+    }
+
+    private void transitionTo(DocumentStatus target){
+        if(!this.status.canTransitionTo(target)){
+            throw new InvalidDocumentStatusTransitionException(this.status, target);
+        }
+        this.status = target;
+        this.updatedAt = Instant.now();
+    }
 
     @PrePersist
     void onCreate() {
