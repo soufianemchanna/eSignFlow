@@ -1,15 +1,14 @@
 package com.esignflow.document_service.common.exception;
 
 
-import com.esignflow.document_service.document.exception.DocumentNotFoundException;
-import com.esignflow.document_service.document.exception.DocumentStorageException;
-import com.esignflow.document_service.document.exception.DocumentValidationException;
+import com.esignflow.document_service.document.exception.*;
 import com.esignflow.document_service.signer.exception.InvalidDocumentStatusException;
 import com.esignflow.document_service.signer.exception.SignerAlreadyExistsException;
 import com.esignflow.document_service.signer.exception.SignerNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -51,6 +50,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidDocumentStatusException.class)
     public ResponseEntity<ApiError> handleInvalidDocumentStatus(InvalidDocumentStatusException ex, HttpServletRequest req) {
         return build(HttpStatus.CONFLICT, "INVALID_DOCUMENT_STATUS", ex.getMessage(), req);
+    }
+
+    @ExceptionHandler(SendValidationException.class)
+    public ResponseEntity<ApiError> handleSendValidation(SendValidationException ex, HttpServletRequest req) {
+        return build(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", ex.getMessage(), req);
+    }
+
+    @ExceptionHandler(InvalidDocumentStatusTransitionException.class)
+    public ResponseEntity<ApiError> handleInvalidDocumentStatusTransition(InvalidDocumentStatusTransitionException ex, HttpServletRequest req) {
+        return build(HttpStatus.CONFLICT, "INVALID_DOCUMENT_STATUS_TRANSITION", ex.getMessage(), req);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ApiError> handleConcurrentUpdate(ObjectOptimisticLockingFailureException ex,
+                                                           HttpServletRequest req) {
+        return build(HttpStatus.CONFLICT, "CONCURRENT_MODIFICATION", "The document was modified by another request. Please retry.", req);
     }
 
     private ResponseEntity<ApiError> build(HttpStatus status, String code, String message, HttpServletRequest req){

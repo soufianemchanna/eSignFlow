@@ -7,4 +7,9 @@ public class S3StorageService implements StorageService{
     public void store(String storageKey, MultipartFile file) {
         // to implement
     }
+
+    @Override
+    public boolean exists(String storageKey) {
+        return false;
+    }
 }
