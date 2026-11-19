@@ -4,7 +4,10 @@ package com.esignflow.document_service.document.service;
 import com.esignflow.document_service.document.domain.Document;
 import com.esignflow.document_service.document.domain.DocumentRepository;
 import com.esignflow.document_service.document.domain.DocumentStatus;
+import com.esignflow.document_service.document.event.DocumentCancelledEvent;
+import com.esignflow.document_service.document.event.DocumentCancelledPayload;
 import com.esignflow.document_service.document.event.DocumentSentEvent;
+import com.esignflow.document_service.document.event.DocumentSentPayload;
 import com.esignflow.document_service.document.exception.DocumentNotFoundException;
 import com.esignflow.document_service.document.exception.InvalidDocumentStatusTransitionException;
 import com.esignflow.document_service.document.exception.SendValidationException;
@@ -60,10 +63,8 @@ public class DocumentWorkflowService {
         documents.save(doc);
 
         // Publish event
-        events.publishEvent(new DocumentSentEvent(UUID.randomUUID(), doc.getId(), doc.getOwnerID(), doc.getTitle(),
-                signers.stream().map(s -> new DocumentSentEvent.SignerRef(s.getId(), s.getName(), s.getEmail(), s.getSigningOrder())).toList(),
-                Instant.now()
-                ));
+        var payloads = signers.stream().map(s -> new DocumentSentPayload(doc.getId(), doc.getOwnerID(), doc.getTitle(),s.getId(), s.getName(), s.getEmail(), s.getSigningOrder())).toList();
+        events.publishEvent(new DocumentSentEvent(payloads));
 
         return doc;
 
@@ -73,7 +74,9 @@ public class DocumentWorkflowService {
     public Document cancel(UUID docId, UUID ownerId){
         Document doc = findOwned(docId, ownerId);
         doc.cancel();
-        return documents.save(doc);
+        documents.save(doc);
+        events.publishEvent(new DocumentCancelledEvent(new DocumentCancelledPayload(doc.getId(), doc.getOwnerID(), doc.getTitle())));
+        return doc;
     }
 
     private Document findOwned(UUID docId, UUID ownerId){

@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: document_svc
       POSTGRES_DB: document_db
     ports:
-      - "54332:5432"
+      - "5433:5432"
     volumes:
       - document_pgdata:/var/lib/postgresql/data
   signature-postgres:
@@ -18,7 +18,7 @@ services:
       POSTGRES_PASSWORD: signature_svc
       POSTGRES_DB: signature_db
     ports:
-      - "54333:5432"
+      - "5434:5432"
     volumes:
       - signature_pgdata:/var/lib/postgresql/data
   notification-postgres:
@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD: notification_svc
       POSTGRES_DB: notification_db
     ports:
-      - "54334:5432"
+      - "5435:5432"
     volumes:
       - notification_pgdata:/var/lib/postgresql/data
 
