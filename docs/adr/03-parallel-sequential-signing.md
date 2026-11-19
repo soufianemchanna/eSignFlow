@@ -1,0 +1,2 @@
+# 03 Parallel and Sequential Signing
+for now, signing_order only a metadata field, store it, sort by it, return it (no logic attached), but for next iteration, we will need to implement logic to enforce signing order, and to allow parallel signing when signing_order is not specified.
